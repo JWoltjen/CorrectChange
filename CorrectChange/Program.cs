@@ -9,38 +9,47 @@ namespace ChangeCalculator
 
         static void Main(string[] args)
         {
-            Console.Write("Enter the total amount due: $");
-            decimal totalDue;
-            while (!decimal.TryParse(Console.ReadLine(), out totalDue) || totalDue < 0)
+            while (true)
             {
-                Console.WriteLine("Invalid input. Please enter a positive number.");
-            }
-
-            Console.WriteLine("Enter the amount paid: $");
-            decimal amountPaid;
-            while (!decimal.TryParse(Console.ReadLine(), out amountPaid) || amountPaid < 0)
-            {
-                Console.WriteLine("Invalid input. Please enter a positive number.");
-            }
-
-            decimal maxDenomination = 100M;
-            Dictionary<decimal, int> change = CalculateChange(totalDue, amountPaid, maxDenomination);
-            if (totalDue > amountPaid)
-            {
-                Console.WriteLine("Insufficient funds for transaction.");
-            }
-            else if (change.Count == 0)
-            {
-                Console.WriteLine("Exact change given.");
-            }
-            else
-            {
-                Console.WriteLine("Change Breakdown:");
-
-                foreach (KeyValuePair<decimal, int> entry in change)
+                Console.Write("Enter the total amount due: $");
+                decimal totalDue;
+                while (!decimal.TryParse(Console.ReadLine(), out totalDue) || totalDue < 0)
                 {
-                    Console.WriteLine($"${entry.Key}: {entry.Value}");
+                    Console.WriteLine("Invalid input. Please enter a positive number.");
                 }
+
+                Console.WriteLine("Enter the amount paid: $");
+                decimal amountPaid;
+                while (!decimal.TryParse(Console.ReadLine(), out amountPaid) || amountPaid < 0)
+                {
+                    Console.WriteLine("Invalid input. Please enter a positive number.");
+                }
+
+                decimal maxDenomination = 100M;
+                Dictionary<decimal, int> change = CalculateChange(totalDue, amountPaid, maxDenomination);
+                if (totalDue > amountPaid)
+                {
+                    Console.WriteLine("Insufficient funds for transaction.");
+                }
+                else if (change.Count == 0)
+                {
+                    Console.WriteLine("Exact change given.");
+                }
+                else
+                {
+                    Console.WriteLine("Change Breakdown:");
+
+                    foreach (KeyValuePair<decimal, int> entry in change)
+                    {
+                        Console.WriteLine($"${entry.Key}: {entry.Value}");
+                    }
+                }
+                Console.WriteLine("Press 'q' to quit or any other key to continue");
+                if (Console.ReadKey().KeyChar == 'q')
+                {
+                    break;
+                }
+                Console.WriteLine();
             }
         }
 
