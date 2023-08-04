@@ -1,56 +1,48 @@
 ﻿using System;
+using System.Diagnostics.Metrics;
 
 namespace ChangeCalculator
 {
     class Program
     {
+        // Create a console app that takes in an amount owed and an amount paid
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Enter the amount owed:");
-            decimal amountOwed = decimal.Parse(Console.ReadLine());
-
-            Console.WriteLine("Enter the amount paid:");
-            decimal amountPaid = decimal.Parse(Console.ReadLine());
-
-            decimal change = amountPaid - amountOwed;
-
-            if (change < 0)
-            {
-                Console.WriteLine("The amount paid is less than the amount owed. Please pay the full amount.");
-            }
-            else if (change == 0)
-            {
-                Console.WriteLine("No change is owed. Thank you!");
-            }
-            else if (change < 1)
-            {
-                Console.WriteLine($"Change owed: ${change}");
-                CalculateCoins(change);
-            }
-            else
-            {
-                Console.WriteLine($"Change owed: ${change}");
-            }
+            
         }
 
-        static void CalculateCoins(decimal change)
+        public static Dictionary<decimal, int>? CalculateChange(decimal totalDue, decimal amountPaid, decimal maxDenomination)
         {
-            int quarters = (int)(change / 0.25m);
-            change %= 0.25m;
+            decimal change = amountPaid - totalDue;
+            if (change < 0 || change == 0)
+            {
+                return null;
+            }
 
-            int dimes = (int)(change / 0.10m);
-            change %= 0.10m;
+            decimal[] denominations = { 100, 50, 20, 10, 5, 1, 0.25M, 0.10M, 0.05M, 0.01M };
+            Dictionary<decimal, int> changeBreakdown = new Dictionary<decimal, int>();
 
-            int nickels = (int)(change / 0.05m);
-            change %= 0.05m;
+            foreach(decimal denomination in denominations)
+            {
+                // the customer doesn't necessarily always use 100 or 50 dollar bills to pay for every transaction, so in these cases we skip those possible denominations when calculating change.
+                if(denomination > maxDenomination)
+                {
+                    continue;
+                }
 
-            int pennies = (int)(change / 0.01m);
+                // casting the division as an int prevents the method from returning anything other than whole numbers, which is what we want when counting change, as we can't give 3.25 quarters back to the customer
+                int count = (int)(change / denomination);
 
-            Console.WriteLine("Change breakdown:");
-            Console.WriteLine($"Quarters: {quarters}");
-            Console.WriteLine($"Dimes: {dimes}");
-            Console.WriteLine($"Nickels: {nickels}");
-            Console.WriteLine($"Pennies: {pennies}");
+                // we calculate the remainder of dividing "change" by "denomination" and assigns the result back as the remaining change.
+                change %= denomination;
+
+                if (count > 0)
+                {
+                    changeBreakdown[denomination] = count;
+                }
+            }
+            return changeBreakdown;
         }
     }
 }
