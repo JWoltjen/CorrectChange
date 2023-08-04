@@ -24,19 +24,23 @@ namespace ChangeCalculator
             }
 
             decimal maxDenomination = 100M;
-
-            try
+            Dictionary<decimal, int> change = CalculateChange(totalDue, amountPaid, maxDenomination);
+            if (totalDue > amountPaid)
             {
-                Dictionary<decimal, int> change = CalculateChange(totalDue, amountPaid, maxDenomination);
+                Console.WriteLine("Insufficient funds for transaction.");
+            }
+            else if (change.Count == 0)
+            {
+                Console.WriteLine("Exact change given.");
+            }
+            else
+            {
                 Console.WriteLine("Change Breakdown:");
+
                 foreach (KeyValuePair<decimal, int> entry in change)
                 {
                     Console.WriteLine($"${entry.Key}: {entry.Value}");
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
             }
         }
 
