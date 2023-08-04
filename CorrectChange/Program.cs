@@ -9,7 +9,35 @@ namespace ChangeCalculator
 
         static void Main(string[] args)
         {
-            
+            Console.Write("Enter the total amount due: $");
+            decimal totalDue;
+            while (!decimal.TryParse(Console.ReadLine(), out totalDue) || totalDue < 0)
+            {
+                Console.WriteLine("Invalid input. Please enter a positive number.");
+            }
+
+            Console.WriteLine("Enter the amount paid: $");
+            decimal amountPaid;
+            while (!decimal.TryParse(Console.ReadLine(), out amountPaid) || amountPaid < 0)
+            {
+                Console.WriteLine("Invalid input. Please enter a positive number.");
+            }
+
+            decimal maxDenomination = 100M;
+
+            try
+            {
+                Dictionary<decimal, int> change = CalculateChange(totalDue, amountPaid, maxDenomination);
+                Console.WriteLine("Change Breakdown:");
+                foreach (KeyValuePair<decimal, int> entry in change)
+                {
+                    Console.WriteLine($"${entry.Key}: {entry.Value}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public static Dictionary<decimal, int>? CalculateChange(decimal totalDue, decimal amountPaid, decimal maxDenomination)
